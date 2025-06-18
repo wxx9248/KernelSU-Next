@@ -19,7 +19,6 @@
 #include "kernel_compat.h"
 #include "throne_tracker.h"
 
-
 struct sdesc {
 	struct shash_desc shash;
 	char ctx[];
@@ -315,7 +314,7 @@ module_param_cb(ksu_debug_manager_uid, &expected_size_ops,
 
 #endif
 
-bool is_manager_apk(char *path)
+bool ksu_is_manager_apk(char *path)
 {
 	int tries = 0;
 
