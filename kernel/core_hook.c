@@ -396,6 +396,17 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 		return 0;
 	}
 
+	if (arg2 == CMD_GET_MANAGER_UID) {
+		uid_t manager_uid = ksu_get_manager_uid();
+		if (copy_to_user(arg3, &manager_uid, sizeof(manager_uid))) {
+			pr_err("get manager uid failed\n");
+		}
+		if (copy_to_user(result, &reply_ok, sizeof(reply_ok))) {
+			pr_err("prctl reply error, cmd: %lu\n", arg2);
+		}
+		return 0;
+	}
+
 	if (arg2 == CMD_HOOK_MODE) {
 #ifdef CONFIG_KSU_KPROBES_HOOK
 		const char *mode = "Kprobes";
@@ -954,7 +965,7 @@ void susfs_try_umount_all(uid_t uid) {
 	ksu_try_umount("/vendor", true, 0, uid);
 	ksu_try_umount("/product", true, 0, uid);
 	ksu_try_umount("/odm", true, 0, uid);
-	// - For '/data/adb/modules' we pass 'false' here because it is a loop device that we can't determine whether 
+	// - For '/data/adb/modules' we pass 'false' here because it is a loop device that we can't determine whether
 	//   its dev_name is KSU or not, and it is safe to just umount it if it is really a mountpoint
 	ksu_try_umount("/data/adb/modules", false, MNT_DETACH, uid);
 	/* For both Legacy KSU and Magic Mount KSU */
