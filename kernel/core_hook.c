@@ -857,6 +857,7 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 
 		return 0;
 	}
+#endif
 
 	// all other cmds are for 'root manager'
 	if (!from_manager) {
